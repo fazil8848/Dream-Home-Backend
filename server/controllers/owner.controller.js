@@ -90,6 +90,7 @@ export const loginOwner = async (req, res) => {
     const { email, password } = req.body;
     const owner = await Owner.findOne({ email });
 
+    console.log(owner);
     if (!owner) {
       res.json({ error: "Invalid Email or Password" });
       return;
@@ -103,7 +104,6 @@ export const loginOwner = async (req, res) => {
     const result = await owner.matchPass(password);
 
     if (result) {
-      // const token = generateToken.generatOwnerToken(res, owner._id);
       res.status(201).json({
         _id: owner._id,
         name: owner.fullName,
