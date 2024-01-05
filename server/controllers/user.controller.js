@@ -99,7 +99,7 @@ export const googleRegister = async (req, res) => {
     }
   } catch (error) {
     console.log("Error While Registering Through Google", error.message);
-    res.json({ error: "Invalid User Data" }).status(404);
+    res.status(404).json({ error: "Invalid User Data" });
     return;
   }
 };
@@ -132,9 +132,8 @@ export const loginUser = asyncHandler(async (req, res) => {
     return;
   }
 
-  if (user && (await user.matchPass(password))) {
-    generateToken.generateToken(res, user._id);
-    req.user = user;
+  if (await user.matchPass(password)) {
+    // generateToken.generateToken(res, user._id);
     res.status(201).json({
       _id: user._id,
       name: user.fullName,
