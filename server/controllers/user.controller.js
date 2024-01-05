@@ -142,10 +142,7 @@ export const loginUser = async (req, res) => {
       return;
     }
 
-    console.log("-----------", user, "------------");
-
     if (user && (await user.matchPass(password))) {
-      generateToken.generateToken(res, user._id);
       req.user = user;
       res.status(201).json({
         _id: user._id,
