@@ -131,6 +131,7 @@ export const verifyUser = async (req, res) => {
 
 export const loginUser = async (req, res) => {
   try {
+    console.log(req.body);
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
@@ -140,6 +141,8 @@ export const loginUser = async (req, res) => {
         .status(401);
       return;
     }
+
+    console.log("-----------", user, "------------");
 
     if (user && (await user.matchPass(password))) {
       generateToken.generateToken(res, user._id);
@@ -155,6 +158,7 @@ export const loginUser = async (req, res) => {
       return;
     }
   } catch (error) {
+    console.log(error.message);
     return res
       .json({ success: false, error: "Internal Server Error" })
       .status(500);
