@@ -141,7 +141,7 @@ export const loginUser = asyncHandler(async (req, res) => {
       profilePic: user.profilePic,
     });
   } else {
-    res.json({ error: "Invalid Email or Password" }).status(401);
+    res.status(401).json({ error: "Invalid Email or Password" });
     return;
   }
 });
