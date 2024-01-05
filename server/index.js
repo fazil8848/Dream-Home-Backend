@@ -33,7 +33,9 @@ app.use("/owner", ownerRouter);
 app.use(notfound);
 app.use(errorHandler);
 
-connectDB(process.env.MONGODB_URL);
+connectDB(
+  "mongodb+srv://bssfazil8848:bssfazil8848@cluster0.der4xkm.mongodb.net/"
+);
 const PORT = process.env.PORT || 5000;
 
 server.listen(PORT, () =>
