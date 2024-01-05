@@ -1,6 +1,6 @@
 import User from "../models/user.js";
-import asyncHandler from "express-async-handler";
-import generateToken from "../utils/generateToke.js";
+// import asyncHandler from "express-async-handler";
+// import generateToken from "../utils/generateToke.js";
 import { sendMail } from "../service/regMail.js";
 import { userVerification } from "../middleware/authMiddleware.js";
 import Properties from "../models/property.js";
@@ -15,29 +15,30 @@ import {
 import Owner from "../models/owner.js";
 import Notification from "../models/notification.js";
 
-export const registerUser = asyncHandler(async (req, res) => {
-  const { fisrtName, lastName, email, password, mobile } = req.body;
+export const registerUser = async (req, res) => {
+  try {
+    const { fisrtName, lastName, email, password, mobile } = req.body;
 
-  const userExists = await User.findOne({ email });
-  const fullName = fisrtName + " " + lastName;
+    const userExists = await User.findOne({ email });
+    const fullName = fisrtName + " " + lastName;
 
-  if (userExists) {
-    res.json({ error: "Existing Email", created: false }).status(409);
-    return;
-  } else {
-    const user = new User({
-      fullName,
-      email,
-      password,
-      mobile,
-    });
+    if (userExists) {
+      res.json({ error: "Existing Email", created: false }).status(409);
+      return;
+    } else {
+      const user = new User({
+        fullName,
+        email,
+        password,
+        mobile,
+      });
 
-    const verificationLink = `${process.env.USER_BASE_URl}/verifyUser/${user._id}`;
+      const verificationLink = `${process.env.USER_BASE_URl}/verifyUser/${user._id}`;
 
-    const mailsend = await sendMail(
-      email,
-      "Account Verification",
-      `<div style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background-image: url('https://res.cloudinary.com/dn6anfym7/image/upload/v1699417415/emailBackground.gif');  background-position: center; background-size: 100%;">
+      const mailsend = await sendMail(
+        email,
+        "Account Verification",
+        `<div style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background-image: url('https://res.cloudinary.com/dn6anfym7/image/upload/v1699417415/emailBackground.gif');  background-position: center; background-size: 100%;">
 
                 <div style="background-color: rgba(255, 255, 255, 0.85); max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                     <h1 style="color: #333;">Account Verification</h1>
@@ -46,22 +47,27 @@ export const registerUser = asyncHandler(async (req, res) => {
                 </div>
         
             </div>`
-    ).catch((err) => console.log(err));
+      ).catch((err) => console.log(err));
 
-    if (mailsend) {
-      const savedUser = await user.save();
-      if (savedUser) {
-        res.status(201).json({
-          user,
-          created: true,
-        });
-      } else {
-        res.json({ error: "Invalid User Data" }).status(404);
-        return;
+      if (mailsend) {
+        const savedUser = await user.save();
+        if (savedUser) {
+          res.status(201).json({
+            user,
+            created: true,
+          });
+        } else {
+          res.json({ error: "Invalid User Data" }).status(404);
+          return;
+        }
       }
     }
+  } catch (error) {
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
-});
+};
 
 export const googleRegister = async (req, res) => {
   try {
@@ -123,65 +129,90 @@ export const verifyUser = async (req, res) => {
   }
 };
 
-export const loginUser = asyncHandler(async (req, res) => {
-  const { email, password } = req.body;
-  const user = await User.findOne({ email });
+export const loginUser = async (req, res) => {
+  try {
+    const { email, password } = req.body;
+    const user = await User.findOne({ email });
 
-  if (user.is_Blocked) {
-    res.json({ success: false, error: "Your Account is Blocked" }).status(401);
-    return;
-  }
+    if (user.is_Blocked) {
+      res
+        .json({ success: false, error: "Your Account is Blocked" })
+        .status(401);
+      return;
+    }
 
-  if (await user.matchPass(password)) {
-    // generateToken.generateToken(res, user._id);
-    res.status(201).json({
-      _id: user._id,
-      name: user.fullName,
-      email: user.email,
-      profilePic: user.profilePic,
-    });
-  } else {
+    if (await user.matchPass(password)) {
+      // generateToken.generateToken(res, user._id);
+      res.status(201).json({
+        _id: user._id,
+        name: user.fullName,
+        email: user.email,
+        profilePic: user.profilePic,
+      });
+    } else {
+      res.status(401).json({ error: "Invalid Email or Password" });
+      return;
+    }
+  } catch (error) {
     res.status(401).json({ error: "Invalid Email or Password" });
     return;
   }
-});
+};
 
-export const logOutUser = asyncHandler(async (req, res) => {
-  res.cookie("userToken", "-", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  res.json({ message: "User Logged Out" }).status(200);
-});
-
-export const userProfile = asyncHandler(async (req, res) => {
-  const user = {
-    _id: req.user._id,
-    name: req.user.fullName,
-    email: req.user.email,
-  };
-  res.status(200).json(user);
-});
-
-export const updateUser = asyncHandler(async (req, res) => {
-  const { id } = req.query;
-  const { email, fullName, mobile, profilePic } = req.body;
-  const user = await User.findById(id);
-  if (user) {
-    user.fullName = fullName;
-    user.email = email;
-    user.mobile = mobile;
-    user.profilePic = profilePic;
-    const updatedUser = await user.save();
-    res.status(200).json({
-      updatedUser,
-      message: "User updated successfully",
+export const logOutUser = async (req, res) => {
+  try {
+    res.cookie("userToken", "-", {
+      httpOnly: true,
+      expires: new Date(0),
     });
-  } else {
-    res.json({ error: "User not found" }).status(401);
-    return;
+    res.json({ message: "User Logged Out" }).status(200);
+  } catch (error) {
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
-});
+};
+
+export const userProfile = async (req, res) => {
+  try {
+    const user = {
+      _id: req.user._id,
+      name: req.user.fullName,
+      email: req.user.email,
+    };
+    res.status(200).json(user);
+  } catch (error) {
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
+  }
+};
+
+export const updateUser = async (req, res) => {
+  try {
+    const { id } = req.query;
+    const { email, fullName, mobile, profilePic } = req.body;
+    const user = await User.findById(id);
+    if (user) {
+      user.fullName = fullName;
+      user.email = email;
+      user.mobile = mobile;
+      user.profilePic = profilePic;
+      const updatedUser = await user.save();
+      res.status(200).json({
+        updatedUser,
+        message: "User updated successfully",
+      });
+    } else {
+      res.json({ error: "User not found" }).status(401);
+      return;
+    }
+  } catch (error) {
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
+  }
+};
 
 export const getPropertiesUser = async (req, res) => {
   try {
