@@ -22,6 +22,8 @@ export const registerUser = async (req, res) => {
     const userExists = await User.findOne({ email });
     const fullName = fisrtName + " " + lastName;
 
+    console.log(req.body);
+
     if (userExists) {
       res.json({ error: "Existing Email", created: false }).status(409);
       return;
@@ -63,6 +65,7 @@ export const registerUser = async (req, res) => {
       }
     }
   } catch (error) {
+    console.log(error);
     return res
       .json({ success: false, error: "Internal Server Error" })
       .status(500);

@@ -103,7 +103,7 @@ export const loginOwner = async (req, res) => {
     const result = await owner.matchPass(password);
 
     if (result) {
-      const token = generateToken.generatOwnerToken(res, owner._id);
+      // const token = generateToken.generatOwnerToken(res, owner._id);
       res.status(201).json({
         _id: owner._id,
         name: owner.fullName,
