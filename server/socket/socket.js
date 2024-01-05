@@ -1,17 +1,18 @@
 import { Server } from "socket.io";
 import http from "http";
 import express from "express";
+import cors from "cors"; // Import the cors middleware
 
 const app = express();
+app.use(cors()); // Use the cors middleware
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "https://www.walkwise.shop/",
+    origin: "https://www.walkwise.shop",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   },
 });
-
 export const getRecipientSocketId = (recipientId) => {
   return userSocketMap[recipientId];
 };
