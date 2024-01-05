@@ -87,6 +87,7 @@ export const verifyOwner = async (req, res) => {
 
 export const loginOwner = async (req, res) => {
   try {
+    console.log(req.body);
     const { email, password } = req.body;
     const owner = await Owner.findOne({ email });
 
