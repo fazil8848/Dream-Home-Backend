@@ -6,6 +6,9 @@ import Owner from "../models/owner.js";
 import KYC from "../models/kycModel.js";
 import Property from "../models/property.js";
 
+
+
+
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
   if (!users) {

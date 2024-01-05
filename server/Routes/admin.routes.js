@@ -4,9 +4,11 @@ import adminController from "../controllers/admin.controller.js"
 const router  = express.Router();
 
 
+
+
 //GET
 router.get('/getUsers',adminController.getUsers);
-router.get('/getOwners',adminController.getOwners);
+router.get('/getOwners',adminController.getOwners);   
 router.get('/getKycs',adminController.getKYCs);
 router.get('/getProperties',adminController.getProperties);
 

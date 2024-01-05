@@ -15,6 +15,9 @@ import {
 import Owner from "../models/owner.js";
 import Notification from "../models/notification.js";
 
+
+
+
 export const registerUser = async (req, res) => {
   try {
     const { fisrtName, lastName, email, password, mobile } = req.body;

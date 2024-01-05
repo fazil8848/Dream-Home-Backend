@@ -9,7 +9,7 @@ import {
   updateOwner,
   addKyc,
   addProperties,
-  getProperties,
+  getProperties,   
   getProperty,
   editProperty,
   getConversations,

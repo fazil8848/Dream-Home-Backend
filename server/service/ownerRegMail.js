@@ -13,6 +13,8 @@ let transporter = nodemailer.createTransport({
   }
 });
 
+
+
 export const sendMail = async (email, subject, msg) => {
   await transporter.sendMail({
     from: 'dreamyourhome62@gmail.com',

@@ -16,6 +16,9 @@ import {
 } from "../socket/socket.js";
 import Booking from "../models/booking.js";
 
+
+
+
 export const ownerSignup = asyncHandler(async (req, res) => {
   const { fisrtName, lastName, email, password, mobile } = req.body;
 

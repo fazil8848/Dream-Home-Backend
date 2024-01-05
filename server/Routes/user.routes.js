@@ -68,7 +68,7 @@ router.post("/orders/:orderID/capture", paypalCaptureOrder);
 router.post("/bookProperty", propertyBooking);
 router.post("/sendMessage", sendMessage);
 router.post("/getConversationMessages", getMessages);
-router.post("/getBookedDetails", getBookedDetails);
+router.post("/getBookedDetails", getBookedDetails);     
 router.post("/addReview", addReview);
 router.post("/propertyIncluded", propertyIncluded);
 router.post("/cancelReservation", cancelReservation);
