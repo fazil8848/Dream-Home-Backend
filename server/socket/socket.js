@@ -8,7 +8,7 @@ app.use(cors()); // Use the cors middleware
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: "http://localhost:3000",
+    origin: "https://www.walkwise.shop",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   },
