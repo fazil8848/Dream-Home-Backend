@@ -6,9 +6,6 @@ import Owner from "../models/owner.js";
 import KYC from "../models/kycModel.js";
 import Property from "../models/property.js";
 
-
-
-
 const getUsers = asyncHandler(async (req, res) => {
   const users = await User.find();
   if (!users) {
@@ -131,14 +128,12 @@ const approveKyc = async (req, res) => {
       const kycs = await KYC.find();
 
       if (ownerUpdated && kycs) {
-        res
-          .status(201)
-          .json({
-            success: true,
-            message: "KYC Updated successfully",
-            result,
-            kycs,
-          });
+        res.status(201).json({
+          success: true,
+          message: "KYC Updated successfully",
+          result,
+          kycs,
+        });
       } else {
         return res
           .json({ success: false, error: "Error While Approving Kycs " })
@@ -155,14 +150,12 @@ const approveKyc = async (req, res) => {
       console.log(kycs);
 
       if (ownerUpdated && kycs) {
-        res
-          .status(201)
-          .json({
-            success: true,
-            message: "KYC Updated successfully",
-            result,
-            kycs,
-          });
+        res.status(201).json({
+          success: true,
+          message: "KYC Updated successfully",
+          result,
+          kycs,
+        });
       } else {
         return res
           .json({ success: false, error: "Error While Approving Kycs " })
@@ -186,13 +179,11 @@ const getProperties = async (req, res) => {
     const properties = await Property.find();
 
     if (properties) {
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Properties retrieved successfully",
-          properties,
-        });
+      res.status(200).json({
+        success: true,
+        message: "Properties retrieved successfully",
+        properties,
+      });
     } else {
       return res
         .json({ success: false, error: "No  properties available" })
@@ -218,13 +209,11 @@ const propertyApproval = async (req, res) => {
       await property.save();
       const properties = await Property.find();
 
-      res
-        .status(200)
-        .json({
-          success: true,
-          message: "Property Updated successfully",
-          properties,
-        });
+      res.status(200).json({
+        success: true,
+        message: "Property Updated successfully",
+        properties,
+      });
     } else {
       return res
         .json({ success: false, error: "Cannot Manage Property" })

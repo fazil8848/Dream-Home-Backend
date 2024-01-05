@@ -1,8 +1,6 @@
 import Notification from "../models/notification.js";
 import { getRecipientSocketId, io } from "../socket/socket.js";
 
-
-
 export const getNotifications = async (req, res) => {
   try {
     const { userId } = req.params;

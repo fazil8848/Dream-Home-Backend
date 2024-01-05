@@ -23,7 +23,6 @@ app.use(
 
 app.use(express.json({ limit: "50mb" }));
 app.use(express.urlencoded({ extended: true }));
-
 app.use(cookieParser());
 
 app.use("/", userRouter);
@@ -32,6 +31,8 @@ app.use("/owner", ownerRouter);
 
 app.use(notfound);
 app.use(errorHandler);
+
+
 
 connectDB(
   "mongodb+srv://bssfazil8848:bssfazil8848@cluster0.der4xkm.mongodb.net/"

@@ -20,8 +20,6 @@ export const addReview = async (req, res) => {
   }
 };
 
-
-
 export const getReviews = async (req, res) => {
   try {
     const { propertyId } = req.params;
