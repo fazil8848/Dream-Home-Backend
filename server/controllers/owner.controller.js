@@ -1,7 +1,7 @@
 import Owner from "../models/owner.js";
 import KYCmodel from "../models/kycModel.js";
-import asyncHandler from "express-async-handler";
-import generateToken from "../utils/generateToke.js";
+// import asyncHandler from "express-async-handler";
+// import generateToken from "../utils/generateToke.js";
 import User from "../models/user.js";
 import { sendMail } from "../service/ownerRegMail.js";
 import { ownerVerification } from "../middleware/authMiddleware.js";
@@ -16,29 +16,30 @@ import {
 } from "../socket/socket.js";
 import Booking from "../models/booking.js";
 
-export const ownerSignup = asyncHandler(async (req, res) => {
-  const { fisrtName, lastName, email, password, mobile } = req.body;
+export const ownerSignup = async (req, res) => {
+  try {
+    const { fisrtName, lastName, email, password, mobile } = req.body;
 
-  const userExists = await Owner.findOne({ email });
-  const fullName = fisrtName + " " + lastName;
+    const userExists = await Owner.findOne({ email });
+    const fullName = fisrtName + " " + lastName;
 
-  if (userExists) {
-    res.json({ error: "Existing Email", created: false }).status(409);
-    return;
-  } else {
-    const owner = new Owner({
-      fullName,
-      email,
-      password,
-      mobile,
-    });
+    if (userExists) {
+      res.json({ error: "Existing Email", created: false }).status(409);
+      return;
+    } else {
+      const owner = new Owner({
+        fullName,
+        email,
+        password,
+        mobile,
+      });
 
-    const verificationLink = `${process.env.OWNER_BASE_URl}/verifyUser/${owner._id}`;
+      const verificationLink = `${process.env.OWNER_BASE_URl}/verifyUser/${owner._id}`;
 
-    const mailsend = await sendMail(
-      email,
-      "Account Verification",
-      `<div style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background-image: url('https://res.cloudinary.com/dn6anfym7/image/upload/v1699417415/emailBackground.gif');  background-position: center; background-size: 100%;">
+      const mailsend = await sendMail(
+        email,
+        "Account Verification",
+        `<div style="font-family: Arial, sans-serif; text-align: center; padding: 50px; background-image: url('https://res.cloudinary.com/dn6anfym7/image/upload/v1699417415/emailBackground.gif');  background-position: center; background-size: 100%;">
 
                 <div style="background-color: rgba(255, 255, 255, 0.85); max-width: 600px; margin: auto; padding: 20px; border-radius: 10px; box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);">
                     <h1 style="color: #333;">Account Verification</h1>
@@ -48,22 +49,28 @@ export const ownerSignup = asyncHandler(async (req, res) => {
                 </div>
         
             </div>`
-    ).catch((err) => console.log(err));
+      ).catch((err) => console.log(err));
 
-    if (mailsend) {
-      const savedUser = await owner.save();
-      if (savedUser) {
-        res.status(201).json({
-          owner,
-          created: true,
-        });
-      } else {
-        res.json({ error: "Invalid user Data" }).status(400);
-        return;
+      if (mailsend) {
+        const savedUser = await owner.save();
+        if (savedUser) {
+          res.status(201).json({
+            owner,
+            created: true,
+          });
+        } else {
+          res.json({ error: "Invalid user Data" }).status(400);
+          return;
+        }
       }
     }
+  } catch (error) {
+    console.log("Error While Registering :-", error.message);
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
-});
+};
 
 export const verifyOwner = async (req, res) => {
   try {
@@ -81,7 +88,10 @@ export const verifyOwner = async (req, res) => {
 
     res.status(200).json(owner);
   } catch (error) {
-    res.json({ error: "Cannot verify user" }).status(404);
+    console.log("Error While verifying Owner :-", error.message);
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
 };
 
@@ -118,18 +128,27 @@ export const loginOwner = async (req, res) => {
       return;
     }
   } catch (error) {
-    console.error(error);
-    res.json({ error: "Invalid Email or Password" });
+    console.log("Error While Logingin Owner :-", error.message);
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
 };
 
-export const logOutOwner = asyncHandler(async (req, res) => {
-  res.cookie("ownerToken", "", {
-    httpOnly: true,
-    expires: new Date(0),
-  });
-  res.status(200).json({ message: "owner Logged Out" });
-});
+export const logOutOwner = async (req, res) => {
+  try {
+    res.cookie("ownerToken", "", {
+      httpOnly: true,
+      expires: new Date(0),
+    });
+    res.status(200).json({ message: "owner Logged Out" });
+  } catch (error) {
+    console.log("Error While Logout Owner :-", error.message);
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
+  }
+};
 
 export const getOwner = async (req, res) => {
   try {
@@ -144,8 +163,10 @@ export const getOwner = async (req, res) => {
       });
     }
   } catch (error) {
-    res.status(401);
-    console.log("Error in owner controller getOwner:-", error.message);
+    console.log("Error While Getiing Owner :-", error.message);
+    return res
+      .json({ success: false, error: "Internal Server Error" })
+      .status(500);
   }
 };
 
