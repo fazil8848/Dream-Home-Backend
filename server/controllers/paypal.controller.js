@@ -4,11 +4,13 @@ const base = "https://api-m.sandbox.paypal.com";
 
 const generateAccessToken = async () => {
   try {
-    if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
-      return { error: "MISSING_API_CREDENTIALS" };
-    }
+    // if (!process.env.PAYPAL_CLIENT_ID || !process.env.PAYPAL_CLIENT_SECRET) {
+    //   return { error: "MISSING_API_CREDENTIALS" };
+    // }
     const auth = Buffer.from(
-      process.env.PAYPAL_CLIENT_ID + ":" + process.env.PAYPAL_CLIENT_SECRET
+      "AZSlMeNIRx4_Zv2-E9yIZMr8gKS0zcgb3bQqruIm5wvAXwXwiAn9QFHRBKladpqZwqVrauDQnZyX-2Hq" +
+        ":" +
+        "EIHNhYBuoO23mXNMT6B6QPtnzoBovwMNOzzYznf98nAVwO9iR_fJkt7ia0s667LCOJbEduOCDGzZd-T4"
     ).toString("base64");
     const response = await fetch(`${base}/v1/oauth2/token`, {
       method: "POST",
