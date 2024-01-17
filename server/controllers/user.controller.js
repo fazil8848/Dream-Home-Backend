@@ -1,6 +1,4 @@
 import User from "../models/user.js";
-import asyncHandler from "express-async-handler";
-import generateToken from "../utils/generateToke.js";
 import { sendMail } from "../service/regMail.js";
 import { userVerification } from "../middleware/authMiddleware.js";
 import Properties from "../models/property.js";
@@ -35,7 +33,7 @@ export const registerUser = async (req, res) => {
         mobile,
       });
 
-      const verificationLink = `${process.env.USER_BASE_URl}/verifyUser/${user._id}`;
+      const verificationLink = `https://www.walkwise.shop/user/verifyUser/${user._id}`;
 
       const mailsend = await sendMail(
         email,
