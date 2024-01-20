@@ -222,8 +222,6 @@ export const getPropertiesUser = async (req, res) => {
   try {
     const properties = await Properties.find({
       isApproved: true,
-      is_available: true,
-      is_Booked: false,
     });
 
     if (properties) {
