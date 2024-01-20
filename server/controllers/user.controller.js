@@ -398,7 +398,7 @@ export const propertyBooking = async (req, res) => {
           message: "New Property Booked",
           sender: booked.user,
           reciever: booked.owner,
-          link: "http://localhost:3000/owner/bookings",
+          link: "/owner/bookings",
         };
 
         const notification = await Notification.create(data);
@@ -433,7 +433,7 @@ export const propertyBooking = async (req, res) => {
           message: "Property Reserved",
           sender: booked.user,
           reciever: booked.owner,
-          link: "http://localhost:3000/owner/enquiries",
+          link: "/owner/enquiries",
         };
 
         const notification = await Notification.create(data);
