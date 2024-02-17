@@ -1,45 +1,44 @@
-import mongoose from 'mongoose';
+import mongoose from "mongoose";
 const ObjectId = mongoose.Types.ObjectId;
 
 const bookingSchema = new mongoose.Schema({
-
   user: {
     type: ObjectId,
     ref: "User",
-    required: true
+    required: true,
   },
   property: {
     type: ObjectId,
     required: true,
-    ref: 'Property'
+    ref: "Property",
   },
   owner: {
     type: ObjectId,
     required: true,
-    ref: 'Owner'
+    ref: "Owner",
   },
   fullName: {
     type: String,
-    required: true
+    required: true,
   },
   email: {
     type: String,
-    required: true
+    required: true,
   },
   startDate: {
     type: Date,
   },
   mobile: {
     type: Number,
-    required: true
+    required: true,
   },
   tokenAmount: {
     type: Number,
-    required: true
+    required: true,
   },
   tokenPaid: {
     type: Boolean,
-    default: false
+    default: false,
   },
   interest: {
     type: String,
@@ -48,10 +47,8 @@ const bookingSchema = new mongoose.Schema({
     type: Boolean,
     default: false,
   },
+});
 
-})
-
-const bookingModel = mongoose.model('Booking', bookingSchema);
-
+const bookingModel = mongoose.model("Booking", bookingSchema);
 
 export default bookingModel;
