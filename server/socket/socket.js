@@ -8,7 +8,7 @@ app.use(cors()); // Use the cors middleware
 const server = http.createServer(app);
 const io = new Server(server, {
   cors: {
-    origin: process.env.USER_BASE_URl,
+    origin: "https://dreamhome.conqod.site",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   },
