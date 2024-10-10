@@ -135,9 +135,10 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    console.log(user);
-
-    if (user.is_Blocked) {
+    if (!user) {
+      res.json({ success: false, error: "User does not exist" }).status(401);
+      return;
+    } else if (user.is_Blocked) {
       res
         .json({ success: false, error: "Your Account is Blocked" })
         .status(401);
