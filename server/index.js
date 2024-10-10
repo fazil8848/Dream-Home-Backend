@@ -15,7 +15,8 @@ import { notfound, errorHandler } from "./middleware/errorMiddleware.js";
 
 app.use(
   cors({
-    origin: process.env.USER_BASE_URl,
+    // origin: process.env.USER_BASE_URl,
+    origin: "https://dreamhome.conqod.site",
     methods: ["GET", "POST", "PUT", "PATCH", "DELETE"],
     credentials: true,
   })
