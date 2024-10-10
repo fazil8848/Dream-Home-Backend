@@ -136,12 +136,12 @@ export const loginUser = async (req, res) => {
     const { email, password } = req.body;
     const user = await User.findOne({ email });
 
-    if (user.is_Blocked) {
-      res
-        .json({ success: false, error: "Your Account is Blocked" })
-        .status(401);
-      return;
-    }
+    // if (user.is_Blocked) {
+    //   res
+    //     .json({ success: false, error: "Your Account is Blocked" })
+    //     .status(401);
+    //   return;
+    // }
 
     if (user && (await user.matchPass(password))) {
       req.user = user;
